@@ -218,7 +218,12 @@ def edge_factory(node_model, child_to_field = "id", parent_to_field = "id", conc
         except IndexError:
             node_model_name = node_model
     else:
-        node_model_name = node_model._meta.model_name
+    	# model._meta.module_name is deprecated in django version 1.7 and removed in django version 1.8.
+        # It is replaced by model._meta.model_name
+        if django.VERSION < (1, 7):
+            node_model_name = node_model._meta.module_name
+        else:
+            node_model_name = node_model._meta.model_name
 
     class Edge(base_model):
         class Meta:
