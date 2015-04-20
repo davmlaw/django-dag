@@ -7,8 +7,9 @@ Some ideas stolen from: from https://github.com/stdbrouw/django-treebeard-dag
 """
 
 
-from django.db import models
+import django
 from django.core.exceptions import ValidationError
+from django.db import models
 
 
 class NodeNotReachableException (Exception):
@@ -218,7 +219,7 @@ def edge_factory(node_model, child_to_field = "id", parent_to_field = "id", conc
         except IndexError:
             node_model_name = node_model
     else:
-    	# model._meta.module_name is deprecated in django version 1.7 and removed in django version 1.8.
+        # model._meta.module_name is deprecated in django version 1.7 and removed in django version 1.8.
         # It is replaced by model._meta.model_name
         if django.VERSION < (1, 7):
             node_model_name = node_model._meta.module_name
