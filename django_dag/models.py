@@ -10,6 +10,7 @@ Some ideas stolen from: from https://github.com/stdbrouw/django-treebeard-dag
 import django
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.deletion import CASCADE
 
 
 class NodeNotReachableException (Exception):
@@ -156,7 +157,7 @@ class NodeBase(object):
         Works on objects: no queries
         """
         if not at:
-          return set([self])
+            return set([self])
         roots = set()
         for a2 in at:
             roots.update(a2._get_roots(at[a2]))
@@ -177,7 +178,7 @@ class NodeBase(object):
         Works on objects: no queries
         """
         if not dt:
-          return set([self])
+            return set([self])
         leaves = set()
         for d2 in dt:
             leaves.update(d2._get_leaves(dt[d2]))
@@ -230,8 +231,8 @@ def edge_factory(node_model, child_to_field = "id", parent_to_field = "id", conc
         class Meta:
             abstract = not concrete
 
-        parent = models.ForeignKey(node_model, related_name = "%s_child" % node_model_name, to_field = parent_to_field)
-        child = models.ForeignKey(node_model, related_name = "%s_parent" % node_model_name, to_field = child_to_field)
+        parent = models.ForeignKey(node_model, related_name = "%s_child" % node_model_name, to_field = parent_to_field, on_delete = CASCADE)
+        child = models.ForeignKey(node_model, related_name = "%s_parent" % node_model_name, to_field = child_to_field, on_delete = CASCADE)
 
         def __unicode__(self):
             return "%s is child of %s" % (self.child, self.parent)
